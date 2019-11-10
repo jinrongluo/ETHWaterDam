@@ -136,7 +136,7 @@ class App extends Component {
             <img className="d-block w-100" src="water_dam3.jpg" alt="Third slide"/>
             <Carousel.Caption>
               <h1>Resilience</h1>
-              <h3>No single point of failure, the network is truely discentralized.</h3>
+              <h3>No single point of failure, the network is truely decentralized.</h3>
             </Carousel.Caption>
           </Carousel.Item>
         </Carousel>
