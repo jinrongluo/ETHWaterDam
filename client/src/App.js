@@ -27,8 +27,9 @@ class App extends Component {
       minLevel: null,
       maxLevel: null,
       startReading: false
-    }
-    this.startReading = this.startReading.bind(this)
+    };
+    this.startReading = this.startReading.bind(this);
+    this.dismissAlert = this.dismissAlert.bind(this);
   }
 
   componentDidMount = async () => {
@@ -49,25 +50,25 @@ class App extends Component {
 
       this.setState({ web3, account: accounts[0], contract: instance });
       this.addEventListener(this)
-      this.getMinMaxLevel(this);
+      this.getMinMaxLevels(this);
     } catch (error) {
       alert(`Failed to load web3, accounts, or contract. Check console for details.`);
       console.error(error);
     }
   };
 
-  async getMinMaxLevel(component) {
+  async getMinMaxLevels(component) {
     if (typeof component.state.contract !== 'undefined') {
-      const min = await component.state.contract.methods.minLevel().call();
-      const max = await component.state.contract.methods.maxLevel().call();
-      component.setState({minLevel: min, maxLevel: max});
+      const minLevel = await component.state.contract.methods.minLevel().call();
+      const maxLevel = await component.state.contract.methods.maxLevel().call();
+      component.setState({minLevel, maxLevel});
     }
   }
 
   startReading(event) {
     if (typeof this.state.contract !== 'undefined') {
       this.state.contract.methods.startReading()
-      .send({from: this.state.account, value: this.state.web3.utils.toWei('0.008', 'ether')})
+      .send({from: this.state.account, value: this.state.web3.utils.toWei('0.01', 'ether')})
       this.setState({startReading: true});
     }
   }
@@ -78,14 +79,14 @@ class App extends Component {
     .on('data', function(event){
       const time = convetToDateTime(event.returnValues.time);
       const reading = event.returnValues.reading;
-      const normal = event.returnValues.normal ? null : 'ALERT!!';
+      const normal = event.returnValues.normal ? undefined : 'ALERT!!';
       
       let newReadings = component.state.readings.slice();
-      const id = newReadings.length + 1;
+      const id = newReadings.length;
       newReadings.unshift({id, time, reading, normal});
 
       component.setState({readings: newReadings, currentTime: time, currentReading: reading});
-      if(!normal){
+      if(normal !== undefined){
         component.setState({alertTime: time, alertReading: reading})
       }
     })
@@ -99,10 +100,15 @@ class App extends Component {
     .on('error', console.error);
   }
 
+  dismissAlert(event){
+    this.setState({alertTime: null, alertReading: null});
+  }
+
   render() {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
+    
     return (
       <div className="App">
         <Carousel>
@@ -137,6 +143,10 @@ class App extends Component {
           </Row>     
           <Alert variant="danger" className={this.state.alertReading ? '' : 'hidden'}>
               {`ALERT: last alarm at ${this.state.alertTime} with reading ${this.state.alertReading}`}
+              <button type="button" className="close" data-dismiss="alert" aria-label="Close"
+               onClick={this.dismissAlert}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
           </Alert>
           <Row className="row_margin">
             <Col xs md="3"> <b>CURRENT READING:</b> </Col>
