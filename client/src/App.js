@@ -7,9 +7,8 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
-import BootstrapTable from 'react-bootstrap-table/lib/BootstrapTable';
-import TableHeaderColumn from 'react-bootstrap-table/lib/TableHeaderColumn';
 import Alert from 'react-bootstrap/Alert'
+import Table from 'react-bootstrap/Table'
 import "./App.css";
 
 class App extends Component {
@@ -165,14 +164,24 @@ class App extends Component {
             <Col></Col> <Col></Col> <Col></Col>
           </Row>
 
-          <BootstrapTable data={this.state.readings} striped hover>
-              <TableHeaderColumn isKey dataField='id'>#</TableHeaderColumn>
-              <TableHeaderColumn dataField='time'>Reading Time</TableHeaderColumn>
-              <TableHeaderColumn dataField='reading'>Reading Data</TableHeaderColumn>
-              <TableHeaderColumn dataField='normal'>
-                Min = {this.state.minLevel}; Max = {this.state.maxLevel}
-              </TableHeaderColumn>
-          </BootstrapTable>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Reading Time</th>
+                <th>Reading Data</th>
+                <th>Min = {this.state.minLevel}; Max = {this.state.maxLevel}</th>
+              </tr>
+            </thead>
+            <tbody>
+            {
+              this.state.readings.map((value, index) => {
+                return <tr> <td>{value.id}</td> <td>{value.time}</td>
+                  <td>{value.reading}</td><td>{value.normal}</td> </tr>
+              })
+            }
+            </tbody>
+          </Table>
         </Container>
       </div>
     );
