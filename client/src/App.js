@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 import ReadingCollectorContract from "./contracts/ReadingCollector.json";
 import getWeb3 from "./getWeb3";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Carousel from 'react-bootstrap/Carousel'
+import Container from 'react-bootstrap/Container'
+import Form from 'react-bootstrap/Form'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
+import Button from 'react-bootstrap/Button'
 import "./App.css";
 
-import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  state = {web3: null, accounts: null, contract: null };
 
   componentDidMount = async () => {
     try {
@@ -25,9 +29,7 @@ class App extends Component {
         deployedNetwork && deployedNetwork.address,
       );
 
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
+      this.setState({ web3, accounts, contract: instance });
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -37,36 +39,84 @@ class App extends Component {
     }
   };
 
-  runExample = async () => {
-    const { accounts, contract } = this.state;
-
-    // Stores a given value, 5 by default.
-    await contract.methods.set(5).send({ from: accounts[0] });
-
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
-
-    // Update state with the result.
-    this.setState({ storageValue: response });
-  };
-
   render() {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
       <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
+        <Carousel>
+        <Carousel.Item>
+          <img className="d-block w-100" src="water_dam.jpg" alt="First slide"/>
+          <Carousel.Caption>
+            <h1>Security</h1>
+            <h3>With rules written in Smart Contract, security is built-in. Period.</h3>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img className="d-block w-100" src="water_dam2.jpg" alt="Third slide"/>
+          <Carousel.Caption>
+            <h1>Autonomy</h1>
+            <h3>Running 24/7, the alarm system is no longer offline.</h3>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img className="d-block w-100" src="water_dam3.jpg" alt="Third slide"/>
+          <Carousel.Caption>
+            <h1>Resilience</h1>
+            <h3>No single point of failure, the network is truely discentralized.</h3>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
+
+      <Container>
+                  <Row>
+                  <a href={this.state.etherscanLink} target="_blank">Last Transaction Details</a>
+                  </Row>
+                  <Row>
+                    <Card>
+                    <Card.Header>Issued Bounties</Card.Header>
+                    
+                    </Card>
+                    </Row>
+                  <Row>
+                  <Card>
+                  <Card.Header>Issue Bounty</Card.Header>
+                  <Form onSubmit={this.handleIssueBounty}>
+                      <Form.Group
+                        controlId="fromCreateBounty"
+                      >
+                        <Form.Control
+                          componentClass="textarea"
+                          name="bountyData"
+                          value={this.state.bountyData}
+                          placeholder="Enter bounty details"
+                          onChange={this.handleChange}
+                        />
+    
+                    <Form.Control
+                          type="text"
+                          name="bountyDeadline"
+                          value={this.state.bountyDeadline}
+                          placeholder="Enter bounty deadline"
+                          onChange={this.handleChange}
+                        />
+                      
+                    <Form.Control
+                          type="text"
+                          name="bountyAmount"
+                          value={this.state.bountyAmount}
+                          placeholder="Enter bounty amount"
+                          onChange={this.handleChange}
+                        />
+
+                        <Button type="submit">Issue Bounty</Button>
+                      </Form.Group>
+                  </Form>
+                  </Card>
+                  </Row>
+                  </Container>
+
       </div>
     );
   }
