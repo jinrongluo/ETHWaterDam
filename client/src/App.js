@@ -25,6 +25,7 @@ class App extends Component {
       alertReading: null,
       minLevel: null,
       maxLevel: null,
+      lastReadingTime: null, // prevent double readings being captured
       startReading: false
     };
     this.startReading = this.startReading.bind(this);
@@ -77,17 +78,23 @@ class App extends Component {
     component.state.contract.events.LogReading({fromBlock: 0, toBlock: 'latest'})
     .on('data', function(event){
       const time = convetToDateTime(event.returnValues.time);
+
+      if(time === component.state.lastReadingTime) {
+        // prevent double data captured
+        return;
+      }
+
       const reading = event.returnValues.reading;
       const normal = event.returnValues.normal ? undefined : 'ALERT!!';
       
       let newReadings = component.state.readings.slice();
       const id = newReadings.length;
       newReadings.unshift({id, time, reading, normal});
-
       component.setState({readings: newReadings, currentTime: time, currentReading: reading});
       if(normal !== undefined){
         component.setState({alertTime: time, alertReading: reading})
       }
+      component.state.lastReadingTime = time;
     })
     .on('error', console.error);
 
