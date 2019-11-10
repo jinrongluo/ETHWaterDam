@@ -1,3 +1,7 @@
+.App {
+  text-align: center;
+}
+
 .App-logo {
   height: 40vmin;
 }
@@ -17,6 +21,24 @@
   color: #09d3ac;
 }
 
-.jumbotron {
-  background-color: #42b5c7;
+.main {
+  padding-top: 50px;
+  min-height: 100vh;
+  justify-content: center;
 }
+
+.row_margin {
+  min-height: 10vh;
+}
+
+.histry_margin {
+  min-height: 5vh;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+}
+
+.hidden { display:none; }

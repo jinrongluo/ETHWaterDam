@@ -9,7 +9,6 @@ contract ReadingCollector is usingProvable {
    uint public maxLevel;
    uint public minLevel;
    
-   int lastReading;
    struct Reading {
        uint256 time;
        uint reading;
