@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import ReadingCollectorContract from "./contracts/ReadingCollector.json";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
+
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 class App extends Component {
   state = { storageValue: 0, web3: null, accounts: null, contract: null };
@@ -17,9 +19,9 @@ class App extends Component {
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const deployedNetwork = ReadingCollectorContract.networks[networkId];
       const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
+        ReadingCollectorContract.abi,
         deployedNetwork && deployedNetwork.address,
       );
 

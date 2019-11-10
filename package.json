@@ -1,0 +1,10 @@
+{
+    "name": "ETHWaterDam",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@truffle/hdwallet-provider": "^1.0.24",
+        "bindings": "^1.5.0",
+        "mz": "^2.7.0"
+    }
+}
